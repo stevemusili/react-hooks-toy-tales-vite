@@ -26,11 +26,20 @@ function App() {
       .catch((error) => console.error(error));
   }, []);
 
+   // POST: Add a new toy
+  function handleAddToy(newToy) {
+    setToys((currentToys) => [...currentToys, newToy]);
+  }
+
 
   return (
     <>
       <Header />
-      {showForm ? <ToyForm /> : null}
+
+      {showForm ? (
+        <ToyForm onAddToy={handleAddToy} />
+      ) : null}
+      
       <div className="buttonContainer">
         <button onClick={handleClick}>Add a Toy</button>
       </div>
