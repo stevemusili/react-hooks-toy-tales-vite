@@ -8,6 +8,7 @@ const API_URL = "http://localhost:3001/toys";
 
 function App() {
   const [showForm, setShowForm] = useState(false);
+  const [toys, setToys] = useState([]);
 
   function handleClick() {
     setShowForm((showForm) => !showForm);
@@ -46,34 +47,33 @@ function App() {
         );
       })
       .catch((error) => console.error(error));
+  }
 
-    // PATCH: Increase likes
-    function handleLikeToy(toy) {
-      fetch(`${API_URL}/${toy.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          likes: toy.likes + 1,
-        }),
+  // PATCH: Increase likes
+  function handleLikeToy(toy) {
+    fetch(`${API_URL}/${toy.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        likes: toy.likes + 1,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update likes");
+        }
+        return response.json();
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to update likes");
-          }
-          return response.json();
-        })
-        .then((updatedToy) => {
-          setToys((currentToys) =>
-            currentToys.map((item) =>
-              item.id === updatedToy.id ? updatedToy : item
-            )
-          );
-        })
-        .catch((error) => console.error(error));
-    }
-
+      .then((updatedToy) => {
+        setToys((currentToys) =>
+          currentToys.map((item) =>
+            item.id === updatedToy.id ? updatedToy : item
+          )
+        );
+      })
+      .catch((error) => console.error(error));
   }
 
   return (
@@ -83,7 +83,7 @@ function App() {
       {showForm ? (
         <ToyForm onAddToy={handleAddToy} />
       ) : null}
-      
+
       <div className="buttonContainer">
         <button onClick={handleClick}>
           Add a Toy
