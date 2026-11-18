@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Header from "./Header";
 import ToyForm from "./ToyForm";
 import ToyContainer from "./ToyContainer";
+
+const API_URL = "http://localhost:3001/toys";
 
 function App() {
   const [showForm, setShowForm] = useState(false);
@@ -10,6 +12,20 @@ function App() {
   function handleClick() {
     setShowForm((showForm) => !showForm);
   }
+
+   // GET: Fetch all toys on page load
+  useEffect(() => {
+    fetch(API_URL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch toys");
+        }
+        return response.json();
+      })
+      .then((data) => setToys(data))
+      .catch((error) => console.error(error));
+  }, []);
+
 
   return (
     <>
