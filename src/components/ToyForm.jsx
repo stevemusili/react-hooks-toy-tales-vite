@@ -41,6 +41,7 @@ function ToyForm({ onAddToy }) {
         onSubmit={handleSubmit}
       >
         <h3>Create a toy!</h3>
+        
         <input
           type="text"
           name="name"

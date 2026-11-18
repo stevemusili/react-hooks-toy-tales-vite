@@ -13,7 +13,7 @@ function App() {
     setShowForm((showForm) => !showForm);
   }
 
-   // GET: Fetch all toys on page load
+  // GET: Fetch all toys on page load
   useEffect(() => {
     fetch(API_URL)
       .then((response) => {
@@ -26,7 +26,7 @@ function App() {
       .catch((error) => console.error(error));
   }, []);
 
-   // POST: Add a new toy
+  // POST: Add a new toy
   function handleAddToy(newToy) {
     setToys((currentToys) => [...currentToys, newToy]);
   }
@@ -46,6 +46,34 @@ function App() {
         );
       })
       .catch((error) => console.error(error));
+
+    // PATCH: Increase likes
+    function handleLikeToy(toy) {
+      fetch(`${API_URL}/${toy.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          likes: toy.likes + 1,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to update likes");
+          }
+          return response.json();
+        })
+        .then((updatedToy) => {
+          setToys((currentToys) =>
+            currentToys.map((item) =>
+              item.id === updatedToy.id ? updatedToy : item
+            )
+          );
+        })
+        .catch((error) => console.error(error));
+    }
+
   }
 
   return (
@@ -57,11 +85,15 @@ function App() {
       ) : null}
       
       <div className="buttonContainer">
-        <button onClick={handleClick}>Add a Toy</button>
+        <button onClick={handleClick}>
+          Add a Toy
+        </button>
       </div>
+
       <ToyContainer
         toys={toys}
         onDeleteToy={handleDeleteToy}
+        onLikeToy={handleLikeToy}
       />
     </>
   );
