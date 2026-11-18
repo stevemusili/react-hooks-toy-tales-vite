@@ -31,6 +31,22 @@ function App() {
     setToys((currentToys) => [...currentToys, newToy]);
   }
 
+  // DELETE: Remove a toy
+  function handleDeleteToy(id) {
+    fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to delete toy");
+        }
+
+        setToys((currentToys) =>
+          currentToys.filter((toy) => toy.id !== id)
+        );
+      })
+      .catch((error) => console.error(error));
+  }
 
   return (
     <>
@@ -43,7 +59,10 @@ function App() {
       <div className="buttonContainer">
         <button onClick={handleClick}>Add a Toy</button>
       </div>
-      <ToyContainer />
+      <ToyContainer
+        toys={toys}
+        onDeleteToy={handleDeleteToy}
+      />
     </>
   );
 }
